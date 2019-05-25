@@ -1,6 +1,6 @@
-var app = require('../app');
-var debug = require('debug')('view-test112:server');
-var http = require('http');
+const app = require('../src/app');
+const debug = require('debug')('view-test112:server');
+const http = require('http');
 
 const port = normalizePort(process.env.PORT || '3000');
 
@@ -13,7 +13,7 @@ app.listen(port, () => {
  */
 
 function normalizePort(val) {
-    var port = parseInt(val, 10);
+    const port = parseInt(val, 10);
 
     if (isNaN(port)) {
         // named pipe
