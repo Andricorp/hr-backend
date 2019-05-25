@@ -1,0 +1,4 @@
+node-modules/
+frontend/
+package.json
+dist/
