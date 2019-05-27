@@ -6,7 +6,8 @@
     "author": "Andricorp <nacigulev@gmail.com>",
     "license": "MIT",
     "scripts": {
-        "start": "nodemon ./bin/www"
+        "start": "node ./bin/www",
+        "dev": "nodemon ./bin/www"
     },
     "dependencies": {
         "debug": "^4.1.1",
