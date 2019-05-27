@@ -1,1 +1,1 @@
-That is silmple hr-tool project
+That is a silmple hr-tool project
