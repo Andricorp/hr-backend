@@ -1,3 +1,4 @@
 const greating = require('./greating');
+const user = require('./user');
 
-module.exports = { greating };
+module.exports = { greating, user };
