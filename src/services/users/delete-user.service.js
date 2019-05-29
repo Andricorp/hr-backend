@@ -5,16 +5,9 @@ const httpErrors = require('http-errors');
 const UserFieldsValidate = require('./user-fields-validate');
 const validation = require('../../helpers/validate');
 
-const checkRole = async (updatedBy, userRole = '1') => {
-    /*  try {
-        const { error } = validation({ id: updatedBy }, UserFieldsValidate.findUser());
-        if (error) {
-            throw error;
-        }
-    } catch (error) {
-        throw new httpErrors.BadRequest(error.message);
-    } */
+const checkRole = async (deletedBy, userRole = '1') => {
     //query to DB
+    console.log('executing check');
 
     const roles = {
         guest: 1,
@@ -23,14 +16,14 @@ const checkRole = async (updatedBy, userRole = '1') => {
         moderator: 4
     };
     //userRole = 'admin';
-    roleOfUpdater = 'moderator'; //getRoleById creatorId todo
+    roleOfdeleter = 'moderator'; //getRoleById creatorId todo
 
-    console.log(userRole, roleOfUpdater, '>>>>>>>>>>>>>>>.');
+    console.log(userRole, roleOfdeleter, '>>>>>>>>>>>>>>>.');
 
-    if (!roles[userRole] || !roles[roleOfUpdater]) {
+    if (!roles[userRole] || !roles[roleOfdeleter]) {
         throw new httpErrors.InternalServerError(`role is invalid`);
     }
-    if (roles[roleOfUpdater] < 3 || roles[roleOfUpdater] <= roles[userRole]) {
+    if (roles[roleOfdeleter] < 3 || roles[roleOfdeleter] <= roles[userRole]) {
         throw new httpErrors.Forbidden('You have no permission for this query');
     }
     return true;
@@ -38,16 +31,17 @@ const checkRole = async (updatedBy, userRole = '1') => {
 
 module.exports = async user => {
     try {
-        const { error } = validation(user, UserFieldsValidate.updateUser());
-        await checkRole(user.updatedBy, user.role);
-        console.log('updating user is allowed');
+        const { error } = validation(user, UserFieldsValidate.deleteUser());
+        await checkRole(user.deletedBy, user.role);
+        console.log('deleting user is allowed');
+
         if (error) {
             throw error;
         }
     } catch (error) {
         throw new httpErrors.BadRequest(error.message);
     }
-    console.log('user updated');
+    console.log('user was deleted');
 
     //creating user in DBS
 

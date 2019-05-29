@@ -4,7 +4,7 @@ const Joi = require('@hapi/joi');
 class UserFieldsValidate {
     static findUser() {
         return {
-            userId: Joi.number().required()
+            id: Joi.number().required()
         };
     }
     static createUser() {
@@ -28,6 +28,15 @@ class UserFieldsValidate {
             email: Joi.string()
                 .email()
                 .required(),
+            role: Joi.string()
+                .lowercase()
+                .required()
+        };
+    }
+    static deleteUser() {
+        return {
+            userId: Joi.number().required(),
+            deletedBy: Joi.number().required(),
             role: Joi.string()
                 .lowercase()
                 .required()
