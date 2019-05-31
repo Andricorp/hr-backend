@@ -8,6 +8,16 @@ const deleteUser = require('../../services/users/delete-user.service');
 //2 -
 
 module.exports = { getAllUsers, getUserById, createUser, updateUser, deleteUser };
+
+/* 
+module.exports = { 
+  getAllUsers = async (req, res) => 
+      res.json(
+        await getAllUsers({query: req.query, body:req.body, params:req.params})
+      )
+};
+*/
+
 /* 
 
 try {
