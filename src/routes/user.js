@@ -3,10 +3,8 @@ const router = express.Router();
 const { getAllUsers, getUserById, createUser, updateUser, deleteUser } = require('../controllers/user/user.controler');
 const httpError = require('../helpers/error');
 
-/* GET home page. */
+/* GET users page. */
 router.get('/', async (req, res, next) => {
-    const id = req.params.user;
-    console.log(`User with id ${id} is requested list`);
     try {
         const list = await getAllUsers();
         res.send(list);
