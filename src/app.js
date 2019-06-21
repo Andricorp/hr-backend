@@ -18,8 +18,16 @@ app.use('/', greating);
 app.use('/api/user', user);
 
 // catch 404 and forward to error handler
-/* app.use(function(req, res, next) {
+app.use(function(req, res, next) {
     next(createError(404));
 });
- */
+
+app.use(function(error, req, res, next) {
+    console.log(error);
+    res.status(error.status || 500).json({
+        error: error.message,
+        status: false
+    });
+});
+
 module.exports = app;
