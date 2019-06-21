@@ -1,0 +1,1 @@
+//base stored functions

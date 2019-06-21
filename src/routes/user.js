@@ -11,8 +11,6 @@ const handleError = fn => {
 
 /* GET home page. */
 router.get('/', async (req, res, next) => {
-    const id = req.params.user;
-    console.log(`User with id ${id} is requested list`);
     try {
         const list = await getAllUsers();
         res.send(list);

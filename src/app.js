@@ -5,6 +5,9 @@ const asyncHandler = require('express-async-handler');
 const { greating, user } = require('./routes/index');
 const bodyParser = require('body-parser');
 
+const { createPool } = require('./bussiness-logic/db');
+createPool();
+
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 
