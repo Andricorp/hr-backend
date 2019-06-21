@@ -6,14 +6,6 @@ const UserFieldsValidate = require('./user-fields-validate');
 const validation = require('../../helpers/validate');
 
 const checkRole = async (creatorId, userRole = '1') => {
-    try {
-        const { error } = validation({ userId: creatorId }, UserFieldsValidate.findUser());
-        if (error) {
-            throw error;
-        }
-    } catch (error) {
-        throw new httpErrors.BadRequest(error.message);
-    }
     //query to DB
 
     const roles = {
@@ -38,14 +30,9 @@ const checkRole = async (creatorId, userRole = '1') => {
 
 module.exports = async user => {
     try {
+        const { error } = validation(user, UserFieldsValidate.createUser());
         await checkRole(user.creatorId, user.role);
         console.log('creating uer is allowed');
-    } catch (error) {
-        throw error;
-    }
-
-    try {
-        const { error } = validation(user, UserFieldsValidate.createUser());
         if (error) {
             throw error;
         }

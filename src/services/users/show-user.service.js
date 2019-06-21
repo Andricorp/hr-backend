@@ -6,9 +6,8 @@ const UserFieldsValidate = require('./user-fields-validate');
 const validation = require('../../helpers/validate');
 
 module.exports = userId => {
-    console.log(UserFieldsValidate.findUser(), '>>>>>>>>>>>>>>>>>>>>>>>>>');
     try {
-        const { error } = validation({ userId }, UserFieldsValidate.findUser());
+        const { error } = validation({ id: userId }, UserFieldsValidate.findUser());
         if (error) {
             throw error;
         }
