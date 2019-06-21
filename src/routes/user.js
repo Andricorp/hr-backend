@@ -3,17 +3,28 @@ const router = express.Router();
 const { getAllUsers, getUserById, createUser, updateUser, deleteUser } = require('../controllers/user/user.controler');
 const httpError = require('../helpers/error');
 
+const handleError = fn => {
+    return (req, res, next) => {
+        fn(req, res).catch(next);
+    };
+};
+
 /* GET home page. */
 router.get('/', async (req, res, next) => {
     const id = req.params.user;
     console.log(`User with id ${id} is requested list`);
     try {
         const list = await getAllUsers();
+        throw new Error('my custom error..');
         res.send(list);
     } catch (error) {
         res.status(httpError(error) || 500).json({ error: { message: error.message } });
     }
 });
+
+/* TODO
+router.get('/', handleError(getAllUsers));
+*/
 
 router.get('/:id', async (req, res, next) => {
     const id = req.params.id;
