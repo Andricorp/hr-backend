@@ -15,7 +15,6 @@ router.get('/', async (req, res, next) => {
     console.log(`User with id ${id} is requested list`);
     try {
         const list = await getAllUsers();
-        throw new Error('my custom error..');
         res.send(list);
     } catch (error) {
         res.status(httpError(error) || 500).json({ error: { message: error.message } });
