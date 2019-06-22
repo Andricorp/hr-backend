@@ -9,7 +9,6 @@ class UserFieldsValidate {
     }
     static createUser() {
         return {
-            userId: Joi.number().required(),
             creatorId: Joi.number().required(),
             name: Joi.string(),
             email: Joi.string()

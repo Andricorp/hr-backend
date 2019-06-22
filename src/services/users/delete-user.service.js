@@ -1,33 +1,11 @@
 //talidating fields
 //const Joi = require('@hapi/joi');
 const httpErrors = require('http-errors');
-
+require('console.json');
 const UserFieldsValidate = require('./user-fields-validate');
 const validation = require('../../helpers/validate');
-
-const checkRole = async (deletedBy, userRole = '1') => {
-    //query to DB
-    console.log('executing check');
-
-    const roles = {
-        guest: 1,
-        hr: 2,
-        admin: 3,
-        moderator: 4
-    };
-    //userRole = 'admin';
-    roleOfdeleter = 'moderator'; //getRoleById creatorId todo
-
-    console.log(userRole, roleOfdeleter, '>>>>>>>>>>>>>>>.');
-
-    if (!roles[userRole] || !roles[roleOfdeleter]) {
-        throw new httpErrors.InternalServerError(`role is invalid`);
-    }
-    if (roles[roleOfdeleter] < 3 || roles[roleOfdeleter] <= roles[userRole]) {
-        throw new httpErrors.Forbidden('You have no permission for this query');
-    }
-    return true;
-};
+const { roles } = require('../../config');
+const checkRole = require('../../helpers/checkRole');
 
 module.exports = async user => {
     try {
@@ -41,9 +19,26 @@ module.exports = async user => {
     } catch (error) {
         throw new httpErrors.BadRequest(error.message);
     }
-    console.log('user was deleted');
+
+    try {
+        console.log(` pool - ${await Object.keys(pool)}`);
+        const query = `SELECT user_name, user_id, user_email, role_id  FROM user WHERE user_id=${user.userId}`;
+        console.log(query);
+        const currentUser = await pool.query(query); //[{ user_id }]
+
+        console.json(currentUser);
+        if (currentUser.length && Object.keys(currentUser[0]).includes('user_id')) {
+            console.log('deleted');
+            // await pool.query(`DELETE FROM user WHERE user_id='${user.userId}'`);
+        } else {
+            throw new Error(`user with id ${user.userId} does not exist`);
+        }
+    } catch (error) {
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', error);
+        throw error;
+    }
 
     //creating user in DBS
 
-    return user;
+    return { message: `user ${user.userId} was deleted` };
 };
