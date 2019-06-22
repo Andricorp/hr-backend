@@ -7,7 +7,7 @@ module.exports = async () => {
     let allUsers;
     try {
         const pool = await global.pool;
-        allUsers = await pool.query(`SELECT user.name FROM user`);
+        allUsers = await pool.query(`SELECT user_name, user_id  FROM user`);
         allUsers.map(user => {
             for (let key in user) {
                 console.log(`${key}: ${user[key]}`);

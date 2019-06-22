@@ -1,32 +1,10 @@
 //talidating fields
 //const Joi = require('@hapi/joi');
 const httpErrors = require('http-errors');
-
 const UserFieldsValidate = require('./user-fields-validate');
 const validation = require('../../helpers/validate');
-
-const checkRole = async (creatorId, userRole = '1') => {
-    //query to DB
-
-    const roles = {
-        guest: 1,
-        hr: 2,
-        admin: 3,
-        moderator: 4
-    };
-    //userRole = 'admin';
-    creatorRole = 'moderator'; //getRoleById creatorId todo
-
-    console.log(userRole, creatorRole, '>>>>>>>>>>>>>>>.');
-
-    if (!roles[userRole] || !roles[creatorRole]) {
-        throw new httpErrors.InternalServerError(`user or creator role is invalid`);
-    }
-    if (roles[creatorRole] < 3 || roles[creatorRole] <= roles[userRole]) {
-        throw new httpErrors.Forbidden('You have no permission for this query');
-    }
-    return true;
-};
+const { roles } = require('../../config');
+const checkRole = require('../../helpers/checkRole');
 
 module.exports = async user => {
     try {
@@ -39,9 +17,27 @@ module.exports = async user => {
     } catch (error) {
         throw new httpErrors.BadRequest(error.message);
     }
-    console.log('user created');
+
+    let newUser = {};
+    user.password =
+        Math.random()
+            .toString(36)
+            .substring(2, 15) +
+        Math.random()
+            .toString(36)
+            .substring(2, 15);
+    console.log(`password - ${newUser.password}`);
 
     //creating user in DBS
+    try {
+        const pool = await global.pool;
+        newUser = await pool.query(`INSERT INTO user(user_name, user_email, user_password, role_id ) VALUES ('${user.name}', '${user.email}', '${user.password}',   ${roles[user.role]});`);
+    } catch (error) {
+        console.log('DB error', error);
+        throw error;
+    }
+
+    console.log('user created');
 
     return user;
 };

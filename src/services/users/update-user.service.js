@@ -4,37 +4,8 @@ const httpErrors = require('http-errors');
 
 const UserFieldsValidate = require('./user-fields-validate');
 const validation = require('../../helpers/validate');
-
-const checkRole = async (updatedBy, userRole = '1') => {
-    /*  try {
-        const { error } = validation({ id: updatedBy }, UserFieldsValidate.findUser());
-        if (error) {
-            throw error;
-        }
-    } catch (error) {
-        throw new httpErrors.BadRequest(error.message);
-    } */
-    //query to DB
-
-    const roles = {
-        guest: 1,
-        hr: 2,
-        admin: 3,
-        moderator: 4
-    };
-    //userRole = 'admin';
-    roleOfUpdater = 'moderator'; //getRoleById creatorId todo
-
-    console.log(userRole, roleOfUpdater, '>>>>>>>>>>>>>>>.');
-
-    if (!roles[userRole] || !roles[roleOfUpdater]) {
-        throw new httpErrors.InternalServerError(`role is invalid`);
-    }
-    if (roles[roleOfUpdater] < 3 || roles[roleOfUpdater] <= roles[userRole]) {
-        throw new httpErrors.Forbidden('You have no permission for this query');
-    }
-    return true;
-};
+const { roles } = require('../../config');
+const checkRole = require('../../helpers/checkRole');
 
 module.exports = async user => {
     try {
@@ -50,6 +21,29 @@ module.exports = async user => {
     console.log('user updated');
 
     //creating user in DBS
+    let updatedtUser;
+    try {
+        const query = `SELECT user_name, user_id, user_email, role_id  FROM user WHERE user_id=${user.userId}`;
+        console.log(query);
+        const currentUser = await pool.query(query);
+        console.json(currentUser);
 
-    return user;
+        // console.json(currentUser);
+        if (currentUser.length && Object.keys(currentUser[0]).includes('user_id')) {
+            console.log('updated');
+            updatedtUser = await pool.query(`UPDATE user
+            SET
+                user_name = '${user.name}',
+                user_email = '${user.email}',
+                role_id= ${roles[user.role]}
+            WHERE user_id = ${user.userId};`);
+        } else {
+            throw new Error(`user with id ${user.userId} does not exist`);
+        }
+    } catch (error) {
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', error);
+        throw error;
+    }
+
+    return updatedtUser;
 };
