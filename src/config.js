@@ -4,8 +4,5 @@ const roles = {
     admin: 3,
     moderator: 4
 };
-const keys = {
-    secretKey: process.env.SECRET,
-    publickKey: process.env.PUBLIC
-};
-module.exports = { roles, keys };
+
+module.exports = { roles };
